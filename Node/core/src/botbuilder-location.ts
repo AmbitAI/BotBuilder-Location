@@ -12,11 +12,13 @@ import * as retrieveFavoriteLocationDialog from './dialogs/retrieve-favorite-loc
 
 export interface ILocationPromptOptions {
     prompt: string;
+    skipPromptSuffix?: boolean;
     requiredFields?: requireFieldsDialog.LocationRequiredFields;
     skipConfirmationAsk?: boolean;
-    useNativeControl?: boolean,
-    reverseGeocode?: boolean,
-    skipFavorites?: boolean
+    confirmationAsk?: string;
+    useNativeControl?: boolean;
+    reverseGeocode?: boolean;
+    skipFavorites?: boolean;
 }
 
 exports.LocationRequiredFields = requireFieldsDialog.LocationRequiredFields;
@@ -28,7 +30,7 @@ exports.Place = Place;
 //=========================================================
 
 
-exports.createLibrary = (apiKey: string): Library => {
+exports.createLibrary = (apiKey: string, localePath: string): Library => {
     if (typeof apiKey === "undefined") {
         throw "'apiKey' parameter missing";
     }
@@ -39,7 +41,7 @@ exports.createLibrary = (apiKey: string): Library => {
     requireFieldsDialog.register(lib);
     addFavoriteLocationDialog.register(lib);
     confirmDialog.register(lib);
-    lib.localePath(path.join(__dirname, 'locale/'));
+    lib.localePath(localePath || path.join(__dirname, 'locale/'));
 
     lib.dialog('locationPickerPrompt', getLocationPickerPrompt());
     lib.dialog('start-hero-card-dialog', createDialogStartHeroCard());
@@ -91,7 +93,9 @@ function getLocationPickerPrompt() {
                 }
                 else {
                     var separator = session.gettext(Strings.AddressSeparator);
-                    var promptText = session.gettext(Strings.ConfirmationAsk, common.getFormattedAddressFromLocation(results.response.place, separator));
+                    var promptText = session.dialogData.args.confirmationAsk
+                        ? session.gettext(session.dialogData.args.confirmationAsk, common.getFormattedAddressFromLocation(results.response.place, separator))
+                        : session.gettext(Strings.ConfirmationAsk, common.getFormattedAddressFromLocation(results.response.place, separator));
                     session.beginDialog('confirm-dialog' , { confirmationPrompt: promptText });
                 }
             }

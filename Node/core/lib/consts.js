@@ -1,4 +1,5 @@
 "use strict";
+exports.__esModule = true;
 exports.LibraryName = "botbuilder-location";
 exports.Strings = {
     "AddressSeparator": "AddressSeparator",
@@ -42,4 +43,6 @@ exports.Strings = {
     "StreetAddress": "StreetAddress",
     "TitleSuffixFacebook": "TitleSuffixFacebook",
     "TitleSuffix": "TitleSuffix",
+    "YesExp": "YesExp",
+    "NoExp": "NoExp"
 };

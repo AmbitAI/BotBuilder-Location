@@ -1,4 +1,5 @@
 "use strict";
+exports.__esModule = true;
 var common = require("../common");
 var consts_1 = require("../consts");
 function register(library) {
@@ -12,7 +13,7 @@ function createDialog() {
         session.send(confirmationPrompt).sendBatch();
     })
         .onDefault(function (session) {
-        var message = parseBoolean(session.message.text);
+        var message = parseBoolean(session, session.message.text);
         if (typeof message == 'boolean') {
             var result;
             if (message == true) {
@@ -27,10 +28,10 @@ function createDialog() {
         session.send(consts_1.Strings.InvalidYesNo).sendBatch();
     });
 }
-function parseBoolean(input) {
+function parseBoolean(session, input) {
     input = input.trim();
-    var yesExp = /^(y|yes|yep|sure|ok|true)/i;
-    var noExp = /^(n|no|nope|not|false)/i;
+    var yesExp = new RegExp(session.gettext(consts_1.Strings.YesExp), 'i');
+    var noExp = new RegExp(session.gettext(consts_1.Strings.NoExp), 'i');
     if (yesExp.test(input)) {
         return true;
     }
