@@ -30,13 +30,13 @@ exports.Place = Place;
 //=========================================================
 
 
-exports.createLibrary = (apiKey: string, localePath: string): Library => {
+exports.createLibrary = (apiKey: any, localePath: string): Library => {
     if (typeof apiKey === "undefined") {
         throw "'apiKey' parameter missing";
     }
 
     var lib = new Library(LibraryName);
-    retrieveFavoriteLocationDialog.register(lib, apiKey);
+    retrieveFavoriteLocationDialog.register(lib, apiKey.bingApiKey);
     retrieveLocationDialog.register(lib, apiKey);
     requireFieldsDialog.register(lib);
     addFavoriteLocationDialog.register(lib);

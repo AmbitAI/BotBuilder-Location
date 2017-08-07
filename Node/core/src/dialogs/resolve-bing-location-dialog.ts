@@ -6,7 +6,7 @@ import * as confirmSingleLocationDialog from './confirm-single-location-dialog';
 import * as chooseLocationDialog from './choose-location-dialog';
 import { LocationCardBuilder } from '../services/location-card-builder';
 
-export function register(library: Library, apiKey: string): void {
+export function register(library: Library, apiKey: any): void {
     confirmSingleLocationDialog.register(library);
     chooseLocationDialog.register(library);
     library.dialog('resolve-bing-location-dialog', createDialog());
@@ -39,7 +39,7 @@ function createDialog() {
 // Maximum number of hero cards to be returned in the carousel. If this number is greater than 5, skype throws an exception.
 const MAX_CARD_COUNT = 5;
 
-function createLocationResolveDialog(apiKey: string) {
+function createLocationResolveDialog(apiKey: any) {
     return common.createBaseDialog()
         .onBegin(function (session, args) {
             if (!args.skipDialogPrompt) {
@@ -58,7 +58,7 @@ function createLocationResolveDialog(apiKey: string) {
 
                     var locationCount = Math.min(MAX_CARD_COUNT, locations.length);
                     locations = locations.slice(0, locationCount);
-                    var reply = new LocationCardBuilder(apiKey).createHeroCards(session, locations);
+                    var reply = new LocationCardBuilder(apiKey.bingApiKey).createHeroCards(session, locations);
                     session.send(reply);
 
                     session.endDialogWithResult({ response: { locations: locations } });

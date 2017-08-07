@@ -2,10 +2,10 @@ import { IDialogResult, Library, Session } from 'botbuilder';
 import * as resolveBingLocationDialog from './resolve-bing-location-dialog';
 import * as retrieveFacebookLocationDialog from './retrieve-facebook-location-dialog';
 
-export function register(library: Library, apiKey: string): void {
+export function register(library: Library, apiKey: any): void {
     library.dialog('retrieve-location-dialog', createDialog());
     resolveBingLocationDialog.register(library, apiKey);
-    retrieveFacebookLocationDialog.register(library, apiKey);
+    retrieveFacebookLocationDialog.register(library, apiKey.bingApiKey);
 }
 
 function createDialog() {
