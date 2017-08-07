@@ -36,7 +36,7 @@ exports.createLibrary = (apiKey: any, localePath: string): Library => {
     }
 
     var lib = new Library(LibraryName);
-    retrieveFavoriteLocationDialog.register(lib, apiKey.bingApiKey);
+    retrieveFavoriteLocationDialog.register(lib, apiKey.bingApiKey || apiKey);
     retrieveLocationDialog.register(lib, apiKey);
     requireFieldsDialog.register(lib);
     addFavoriteLocationDialog.register(lib);

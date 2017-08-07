@@ -9,6 +9,10 @@ const findImageByPointUrl = "https://dev.virtualearth.net/REST/V1/Imagery/Map/Ro
 const findImageByBBoxUrl = "https://dev.virtualearth.net/REST/V1/Imagery/Map/Road?mapArea=%1$s,%2$s,%3$s,%4$s&mapSize=500,280&pp=%5$s,%6$s;1;%7$s&dpi=1&logo=always" + formAugmentation;
 
 export function getLocationByQuery(apiKey: any, address: string): Promise<Array<RawLocation>> {
+    if (!apiKey.bingApiKey) {
+        var url = addKeyToUrl(findLocationByQueryUrl, apiKey) + "&q=" + encodeURIComponent(address);
+        return getLocation(url);
+    }
     const requestData = {
         url: `https://api.nzpost.co.nz/privateaddresschecker/1.0/find?address_line_1=${encodeURIComponent(address)}&type=Postal&client_id=${apiKey.client_id}&client_secret=${apiKey.client_secret}`,
         headers: {
@@ -23,37 +27,19 @@ export function getLocationByQuery(apiKey: any, address: string): Promise<Array<
                 if (body && body.addresses) {
                     let bingLocations: Array<RawLocation> = [];
                     let solved = 0;
-                    var url = addKeyToUrl(findLocationByQueryUrl, apiKey.bingApiKey) + "&q=" + encodeURIComponent(body.addresses[0].FullAddress);
-                    getLocation(url)
-                        .then(locations => {
-                            solved += 1;
-                            if (locations.length > 0) {
-                                bingLocations.push(locations[0]);
-                            }
-                            if (solved === 3) {
-                                resolve(bingLocations);
-                            }
-                        });url = addKeyToUrl(findLocationByQueryUrl, apiKey.bingApiKey) + "&q=" + encodeURIComponent(body.addresses[1].FullAddress);
-                    getLocation(url)
-                        .then(locations => {
-                            solved += 1;
-                            if (locations.length > 0) {
-                                bingLocations.push(locations[0]);
-                            }
-                            if (solved === 3) {
-                                resolve(bingLocations);
-                            }
-                        });url = addKeyToUrl(findLocationByQueryUrl, apiKey.bingApiKey) + "&q=" + encodeURIComponent(body.addresses[2].FullAddress);
-                    getLocation(url)
-                        .then(locations => {
-                            solved += 1;
-                            if (locations.length > 0) {
-                                bingLocations.push(locations[0]);
-                            }
-                            if (solved === 3) {
-                                resolve(bingLocations);
-                            }
-                        });
+                    for (let i=0; i<3; i++) {
+                        let url = addKeyToUrl(findLocationByQueryUrl, apiKey.bingApiKey) + "&q=" + encodeURIComponent(body.addresses[i].FullAddress);
+                        getLocation(url)
+                            .then(locations => {
+                                solved += 1;
+                                if (locations.length > 0) {
+                                    bingLocations.push(locations[0]);
+                                }
+                                if (solved === 3) {
+                                    resolve(bingLocations);
+                                }
+                            });
+                    }
                 } else {
                     throw ("Invalid Api Response");
                 }

@@ -5,7 +5,7 @@ import * as retrieveFacebookLocationDialog from './retrieve-facebook-location-di
 export function register(library: Library, apiKey: any): void {
     library.dialog('retrieve-location-dialog', createDialog());
     resolveBingLocationDialog.register(library, apiKey);
-    retrieveFacebookLocationDialog.register(library, apiKey.bingApiKey);
+    retrieveFacebookLocationDialog.register(library, apiKey.bingApiKey || apiKey);
 }
 
 function createDialog() {

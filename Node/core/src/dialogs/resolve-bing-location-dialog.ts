@@ -58,7 +58,7 @@ function createLocationResolveDialog(apiKey: any) {
 
                     var locationCount = Math.min(MAX_CARD_COUNT, locations.length);
                     locations = locations.slice(0, locationCount);
-                    var reply = new LocationCardBuilder(apiKey.bingApiKey).createHeroCards(session, locations);
+                    var reply = new LocationCardBuilder(apiKey.bingApiKey || apiKey).createHeroCards(session, locations);
                     session.send(reply);
 
                     session.endDialogWithResult({ response: { locations: locations } });
